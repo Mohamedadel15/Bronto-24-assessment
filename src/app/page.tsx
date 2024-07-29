@@ -18,6 +18,8 @@ export default async function HomePage() {
       cache: "no-store",
     });
 
+    
+
     return (
       <article className="min-h-screen px-6 py-8 flex flex-col gap-5">
         <div className="flex justify-end w-full">
