@@ -7,7 +7,7 @@ import SideNav from "@/components/header/SideNav";
 import Header from "@/components/header/Header";
 import { Toaster } from "@/components/ui/sonner"
 
-import "./globals.css";
+import '@/style/globals.css';
 
 const inter = Inter({
   weight: ["400", "500", "600", "700", "800", "900"],
