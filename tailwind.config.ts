@@ -65,7 +65,7 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       gridTemplateColumns: {
-        'custom-300': 'repeat(auto-fit, minmax(300px, 320px))',
+        'custom-300': 'repeat(auto-fit, minmax(300px, 1fr))',
       },
       keyframes: {
         "accordion-down": {
