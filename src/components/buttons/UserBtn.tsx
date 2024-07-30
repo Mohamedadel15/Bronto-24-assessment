@@ -10,10 +10,42 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import EditUserForm from '../forms/EditUserForm';
+import AddUserForm from '../forms/AddUserForm';
 
-export default function UserBtn({ addUser = false }) {
+interface UserBtnProps {
+    addUser?: boolean;
+    default_user_details?: {
+        id: number;
+        user_name: string;
+        age: number;
+        job_title: string;
+        name: string;
+        created_at: string;
+        country: {
+            id: number;
+            name: string;
+        };
+    }
+}
+
+interface UserDetails {
+    id: number;
+    name: string;
+    user_name: string;
+    age: number;
+    job_title: string;
+    created_at: string;
+    country: {
+        id: number;
+        name: string;
+    };
+}
+
+
+
+export default function UserBtn({ addUser = false, default_user_details }: UserBtnProps) {
     const { isOpen, setIsOpen, handleClose, handleOpen } = UseISOpen()
-
 
     return (
         <>
@@ -39,10 +71,21 @@ export default function UserBtn({ addUser = false }) {
                     id='modal-desc'
                     className="max-h-[80vh] overflow-y-auto bg-white ">
                     <DialogHeader>
-                        <DialogTitle className="flex items-center my-5 capitalize text-primary gap-3">
-                            ;hjh
+                        <DialogTitle className="flex items-center my-2 capitalize text-black gap-3 font-bold text-2xl">
+                            {addUser ? 'Add New User' : 'Edit User'}
                         </DialogTitle>
+                        <p className='text-sm text-gray-400'>
+                            It will take a couple of minutes.
+                            Change profile settings and confirm with SMS code.
+                        </p>
+                        <h2 className='font-bold'>Your personal data</h2>
                     </DialogHeader>
+                    {
+                        addUser ? <AddUserForm handleClose={handleClose} />
+                            : <EditUserForm
+                                default_value={default_user_details as UserDetails}
+                                handleClose={handleClose} />
+                    }
                     {/* {
                         DialogForm && <DialogForm handleClose={handleClose} />
                     } */}

@@ -1,15 +1,30 @@
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Ellipsis } from "lucide-react";
 import UserBtn from "@/components/buttons/UserBtn";
 import DeleteUserBtn from "@/components/buttons/DeleteUserBtn";
 
-export default function SelectUSerCardAction({ user_details }: { user_details: any }) {
+import { Ellipsis } from "lucide-react";
+
+interface UserDetailsProps {
+    user_details: {
+        id: number;
+        user_name: string;
+        age: number;
+        job_title: string;
+        name: string;
+        created_at: string;
+        country: {
+            id: number;
+            name: string;
+        };
+    }
+}
+
+export default function SelectUSerCardAction({ user_details }: UserDetailsProps) {
     return (
         <DropdownMenu>
             <div className="w-full flex justify-end">
@@ -18,8 +33,8 @@ export default function SelectUSerCardAction({ user_details }: { user_details: a
                 </DropdownMenuTrigger>
             </div>
             <DropdownMenuContent className="absolute -right-3 w-[192px] p-0">
-                <UserBtn />
-                <DeleteUserBtn user_id={user_details?.id}  />
+                <UserBtn default_user_details={user_details} />
+                <DeleteUserBtn user_id={user_details?.id} />
             </DropdownMenuContent>
         </DropdownMenu>
 

@@ -1,5 +1,6 @@
-import SelectUSerCardAction from '@/components/cards/SelectUSerCardAction'
 import Image from 'next/image'
+
+import SelectUSerCardAction from '@/components/cards/SelectUSerCardAction'
 
 interface UserCardProps {
     user_details: {
@@ -9,6 +10,10 @@ interface UserCardProps {
         job_title: string;
         name: string;
         created_at: string;
+        country: {
+            id: number;
+            name: string;
+        };
     }
 }
 
@@ -16,7 +21,7 @@ export default function UserCard({ user_details }: UserCardProps) {
     return (
         <main
             style={{ backgroundImage: 'url(/card.png)' }}
-            className='w-full max-w-[400px] h-[350px] flex flex-col justify-between rounded-md p-2 bg-cover bg-center bg-no-repeat '>
+            className='w-full  h-[350px] flex flex-col justify-between rounded-md p-2 bg-cover bg-center bg-no-repeat '>
             <SelectUSerCardAction user_details={user_details} />
             <div className='flex flex-col justify-end  w-full h-full rounded-lg gap-2'>
                 <p className='rounded-xl bg-white text-primary capitalize w-fit py-1 px-3 text-xs'>{user_details?.job_title}</p>

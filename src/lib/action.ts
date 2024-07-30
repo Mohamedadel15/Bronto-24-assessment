@@ -7,19 +7,14 @@ import { BASE_URL } from "@/lib/utils";
 interface FormData {
     get(key: string): string | null;
 }
-
-interface LoginForm_data {
-    email: string;
-    password: string;
-}
-interface FormError {
-    email?: string;
-    full_name?: string;
-    password?: string;
-    national_image?: string;
-    error?: string;
-    success?: string;
-    token?: string;
+interface UserDetails {
+    id: number;
+    name: string;
+    user_name: string;
+    age: number;
+    job_title: string;
+    created_at: string;
+    country: number;
 }
 
 interface ResponseData {
@@ -37,14 +32,6 @@ interface Response {
 function handleError(response: Response, data: ResponseData) {
     const error = data.message ?? response.error ?? response.data?.message ?? data?.detail ?? 'error occurred Please try again later';
     return { error };
-}
-
-function isValidEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function isValidUserName(userName: string): boolean {
-    return /^[a-zA-Z0-9 ]{3,30}$/.test(userName);
 }
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -91,14 +78,101 @@ async function GetDataInServerSide(
 }
 
 /* 
-    ! ############ POST DATA IN SERVER SIDE FUNCTION ###################
-    * @param {string} End_Point - request end point
-    * @param {object} headers - request headers
-    * @param {object} method - request Another method
-    ? {...} - request body parameters or query parameters
+    ! ############ ADD User FUNCTION ###################
 */
+async function handleAddUSer(prevState: any, formData: FormData) {
+    const FormData = {
+        name: formData.get("name"),
+        user_name: formData.get("user_name"),
+        age: formData.get("age"),
+        country: formData.get("country"),
+        gender: 'Male',
+        job_title: formData.get("job_title"),
+    };
 
+    if (!FormData.name) {
+        return { name: "Name is required" };
+    }
 
+    if (!FormData.user_name) {
+        return { user_name: "USer Name IS Required !" };
+    }
+
+    if (!FormData.age) {
+        return { age: "Age is required" };
+    }
+
+    if (!FormData.country) {
+        return { country: "Country is required" };
+    }
+
+    if (!FormData.job_title) {
+        return { job_title: "Job title is required" };
+    }
+
+    // ######### Post Actions #########
+    else {
+        let redirectPath;
+        try {
+            const response = await fetch(BASE_URL + "/userprofiles/create/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(FormData),
+            });
+            const data = await response.json();
+            if (response.status === 201 || response.status === 200) {
+                revalidatePath(`/`, "page");
+                return { success: "User created successfully" };
+            } else if (response.status === 401) {
+                redirectPath = "/login";
+            } else {
+                redirectPath = null;
+                return {
+                    error:
+                        data?.message || "Error Occur !",
+                };
+            }
+        } catch (error) {
+            redirectPath = null;
+            throw new Error("An error occurred while creating the user");
+        } finally {
+            redirectPath && redirect(redirectPath);
+        }
+    }
+}
+
+/* 
+    ! ############ UPDATE User FUNCTION ###################
+*/
+async function handleUpdateUser(formData: UserDetails , id : number) {
+    let redirectPath;
+    try {
+        const response = await fetch(BASE_URL + "/userprofiles/update/" + id + "/", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        if (response.ok) {
+            revalidatePath(`/`, "page");
+            return { success: "User updated successfully" };
+        } else if (response.status === 401) {
+            redirectPath = "/login";
+        } else {
+            return {
+                error: data?.message || "Error Occur !",
+            };
+        }
+    } catch (error) {
+        throw new Error("An error occurred while updating the user");
+    } finally {
+        redirectPath && redirect(redirectPath);
+    }
+}
 
 /* 
     ! ############ DELETE FUNCTION ###################
@@ -143,4 +217,4 @@ async function handleDeleteRow(End_Point: string, id: number, pathUrl: string) {
         redirectPath && redirect(redirectPath);
     }
 }
-export { GetDataInServerSide, handleDeleteRow };
+export { GetDataInServerSide, handleDeleteRow, handleAddUSer, handleUpdateUser };

@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner"
 
 import '@/style/globals.css';
 
+
 const inter = Inter({
   weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
