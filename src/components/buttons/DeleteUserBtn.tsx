@@ -11,8 +11,18 @@ import {
 } from "@/components/ui/dialog";
 import DeleteUserForm from '@/components/forms/DeleteUserForm';
 
-export default function DeleteUserBtn({ user_id }: { user_id: number }) {
+interface DeleteUserBtnProps {
+    user_id: number;
+    handleCloseDropDown: () => void;
+}
+
+export default function DeleteUserBtn({ user_id, handleCloseDropDown }: DeleteUserBtnProps) {
     const { isOpen, setIsOpen, handleClose, handleOpen } = UseISOpen()
+
+    const handleCloseDialog = () => {
+        handleClose();
+        handleCloseDropDown && handleCloseDropDown();
+    }
 
     return (
         <>
@@ -32,7 +42,7 @@ export default function DeleteUserBtn({ user_id }: { user_id: number }) {
                         </DialogTitle>
                         <p className='text-sm text-gray-400'>Once you delete users list, you will lose all data associated with it.</p>
                     </DialogHeader>
-                    <DeleteUserForm handleClose={handleClose} user_id = {user_id}/>
+                    <DeleteUserForm handleClose={handleCloseDialog} user_id={user_id} />
                 </DialogContent>
             </Dialog>
         </>

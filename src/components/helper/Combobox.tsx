@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -59,13 +58,20 @@ export function ComboboxDemo({
         setValue(choice.name);
         setOpen(false);
         setSearch("");
+        setIsStartFetch(false);
         setSelected?.(choice);
+    }
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setValue(e.target.value);
+        setIsStartFetch(true);
     }
 
     function fetchMoreData() {
         if (data?.next && search.length === 0 && !loading) {
             setPage(page + 1);
             setPaginateLoading(true);
+            setIsStartFetch(true);
         }
     }
 
@@ -82,19 +88,52 @@ export function ComboboxDemo({
 
     React.useEffect(() => {
         if (search) {
-            let timeOut = setTimeout(() => {
+            if (isStartFetch) {
+                let timeOut = setTimeout(() => {
+                    setLoading(true);
+                    // Your search logic here
+                    fetch(BASE_URL + `${end_point}?search=${search}&page=1`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    })
+                        .then((res) => res.json())
+                        .then((resultData) => {
+                            setData(resultData);
+                            setResults(resultData?.results);
+                        })
+                        .catch((err) => console.error(err))
+                        .finally(() => {
+                            setPaginateLoading(false);
+                            setLoading(false);
+                            setIsStartFetch(false);
+                        });
+                }, 1000);
+                return () => clearTimeout(timeOut);
+            }
+        } else {
+            if (isStartFetch) {
                 setLoading(true);
                 // Your search logic here
-                fetch(BASE_URL + `${end_point}?search=${search}&page=1`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
+                fetch(
+                    BASE_URL +
+                    `${end_point}?search=${search}&page=${page}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                )
                     .then((res) => res.json())
                     .then((resultData) => {
                         setData(resultData);
-                        setResults([...resultData?.results]);
+                        if (page === 1) {
+                            setResults(resultData?.results);
+                        } else {
+                            setResults([...results, ...resultData?.results]);
+                        }
                     })
                     .catch((err) => console.error(err))
                     .finally(() => {
@@ -102,34 +141,10 @@ export function ComboboxDemo({
                         setLoading(false);
                         setIsStartFetch(false);
                     });
-            }, 1000);
-            return () => clearTimeout(timeOut);
-        } else {
-            setLoading(true);
-            // Your search logic here
-            fetch(
-                BASE_URL +
-                `${end_point}?search=${search}&page=${page}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            )
-                .then((res) => res.json())
-                .then((resultData) => {
-                    setData(resultData);
-                    setResults([...results, ...resultData?.results]);
-                })
-                .catch((err) => console.error(err))
-                .finally(() => {
-                    setPaginateLoading(false);
-                    setLoading(false);
-                    setIsStartFetch(false);
-                });
+            }
+
         }
-    }, [search, page]);
+    }, [search, page, isStartFetch]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -160,7 +175,7 @@ export function ComboboxDemo({
                         id="framework"
                         type="text"
                         placeHolder="What Are You Looking For ......"
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={handleChange}
                         value={search}
                         inputStyle="bg-inherit border"
                     />

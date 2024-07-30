@@ -1,28 +1,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { AddUserFormProps } from "@/lib/types";
 import { handleUpdateUser } from "@/lib/action";
 import { CompareValues } from "@/lib/utils";
 
 import InputDemo from "@/components/helper/Input-demo";
 import FormSubmittingButton from "@/components/forms/FormSubmittingButton";
 import { ComboboxDemo } from "@/components/helper/Combobox";
-
-interface AddUserFormProps {
-  handleClose: () => void;
-  default_value: {
-    id: number;
-    name: string;
-    user_name: string;
-    age: number | string;
-    job_title: string;
-    created_at: string;
-    country: {
-      name: string;
-      id: number;
-    };
-  }
-}
 
 interface UserDetails {
   name: string;
@@ -39,7 +24,7 @@ interface choice {
 }
 
 interface Response {
-  error?: string; 
+  error?: string;
   // other properties
 }
 

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 
 import UseISOpen from '@/hooks/useIsOpen';
+import { UserBtnProps, UserDetails } from '@/lib/types';
 
 import {
     Dialog,
@@ -10,43 +11,16 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import EditUserForm from '../forms/EditUserForm';
-import AddUserForm from '../forms/AddUserForm';
+import EditUserForm from '@/components/forms/EditUserForm';
+import AddUserForm from '@/components/forms/AddUserForm';
 
-interface UserBtnProps {
-    addUser?: boolean;
-    default_user_details?: {
-        id: number;
-        user_name: string;
-        age: number;
-        job_title: string;
-        name: string;
-        created_at: string;
-        country: {
-            id: number;
-            name: string;
-        };
-    }
-}
-
-interface UserDetails {
-    id: number;
-    name: string;
-    user_name: string;
-    age: number;
-    job_title: string;
-    created_at: string;
-    country: {
-        id: number;
-        name: string;
-    };
-}
-
-
-
-export default function UserBtn({ addUser = false, default_user_details }: UserBtnProps) {
+export default function UserBtn({ addUser = false, default_user_details, handleCloseDropDown }: UserBtnProps) {
     const { isOpen, setIsOpen, handleClose, handleOpen } = UseISOpen()
 
+    const handleCloseDialog = () => {
+        handleClose();
+        handleCloseDropDown && handleCloseDropDown();
+    }
     return (
         <>
             {
@@ -84,11 +58,9 @@ export default function UserBtn({ addUser = false, default_user_details }: UserB
                         addUser ? <AddUserForm handleClose={handleClose} />
                             : <EditUserForm
                                 default_value={default_user_details as UserDetails}
-                                handleClose={handleClose} />
+                                handleClose={handleCloseDialog}
+                            />
                     }
-                    {/* {
-                        DialogForm && <DialogForm handleClose={handleClose} />
-                    } */}
                 </DialogContent>
             </Dialog>
         </>

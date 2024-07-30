@@ -2,39 +2,16 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from "next/navigation";
+
 import { BASE_URL } from "@/lib/utils";
+import { actionUserDetails ,ResponseData ,Response , FormData } from '@/lib/types';
 
-interface FormData {
-    get(key: string): string | null;
-}
-interface UserDetails {
-    id: number;
-    name: string;
-    user_name: string;
-    age: number;
-    job_title: string;
-    created_at: string;
-    country: number;
-}
-
-interface ResponseData {
-    message?: string;
-    token?: string;
-    detail?: any;
-}
-
-interface Response {
-    error?: string;
-    data?: ResponseData;
-    detail?: string;
-}
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 function handleError(response: Response, data: ResponseData) {
     const error = data.message ?? response.error ?? response.data?.message ?? data?.detail ?? 'error occurred Please try again later';
     return { error };
 }
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 /* 
     ! ############ GET DATA IN SERVER SIDE FUNCTION ###################
@@ -146,7 +123,7 @@ async function handleAddUSer(prevState: any, formData: FormData) {
 /* 
     ! ############ UPDATE User FUNCTION ###################
 */
-async function handleUpdateUser(formData: UserDetails , id : number) {
+async function handleUpdateUser(formData: actionUserDetails , id : number) {
     let redirectPath;
     try {
         const response = await fetch(BASE_URL + "/userprofiles/update/" + id + "/", {
@@ -159,7 +136,7 @@ async function handleUpdateUser(formData: UserDetails , id : number) {
         const data = await response.json();
         if (response.ok) {
             revalidatePath(`/`, "page");
-            return { success: "User updated successfully" };
+            return { success: "updated successfully" };
         } else if (response.status === 401) {
             redirectPath = "/login";
         } else {
