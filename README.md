@@ -3,6 +3,7 @@
 This application is built using various custom components and libraries to ensure a responsive and reusable design. Below is a detailed description of the technologies and custom solutions used in the application.
 
 # Production Link U can See From It
+
     https://bronto-24-assessment.vercel.app/
 
 ## Installation
@@ -43,5 +44,8 @@ Discuss security measures, and mention the issue with `process.env.NODE_TLS_REJE
 
 To bypass SSL certificate errors during development, we used:
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+* this solution is not secure pleas set ssl cert
+
 ```
 ````
