@@ -11,8 +11,8 @@ This application is built using various custom components and libraries to ensur
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/yourapp.git
-   cd yourapp
+   git clone https://github.com/Mohamedadel15/Bronto-24-assessment.git
+   cd Bronto-24-assessment
     npm install
     npm run dev
    ```
@@ -21,6 +21,10 @@ This application is built using various custom components and libraries to ensur
 
 - **Shadcn ui**: A UI library used for building the user interface components.
 - **Custom Grid System**: A custom grid class was created to ensure responsiveness across all screen sizes without the need for specific breakpoints like `md`, `lg`, `sm`.
+  such as :-
+  gridTemplateColumns: {
+  'custom-300': 'repeat(auto-fit, minmax(300px, 1fr))',
+  },
 - **Custom Components**: Various custom components were created to avoid repetition and ensure a clean and maintainable codebase.
 
 ### Environment Setup
